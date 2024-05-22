@@ -19,23 +19,27 @@ export default function HomeScreen() {
   const [images, setImages] = useState([]);
 
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
 
-    console.log(result);
+      console.log(result);
 
-    if (!result?.canceled) {
-      setImages((prevImages) => [...prevImages, result?.assets[0].uri]);
+      if (!result?.canceled) {
+        setImages((prevImages) => [...prevImages, result?.assets[0].uri]);
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Image Pick Error");
     }
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, marginVertical: 20 }}>
       <Button title="Pick an image from camera roll" onPress={pickImage} />
       <Text>Images: {images.length}</Text>
       {images?.length > 0 && (
